@@ -14,3 +14,8 @@ func _physics_process(delta: float) -> void:
 		position.x -= 1
 	if Input.is_action_pressed("Rightward"):
 		position.x += 1
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		rotation_degrees.x -= event.relative.y
+		rotation_degrees.y -= event.relative.x
