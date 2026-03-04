@@ -25,7 +25,7 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, S)
 	
 	move_and_slide()
-	## ALERT prevent placing blocks outside chunks
+	## done :D
 	if Input.is_action_just_pressed("mine"):
 		var point = $Camera/Ray.get_collision_point()
 		var origin = $Camera/Ray.global_transform.origin
@@ -37,7 +37,10 @@ func _physics_process(delta: float) -> void:
 		var origin = $Camera/Ray.global_transform.origin
 		var dir = (point - origin).normalized()
 		var goal = point - dir * 0.01
-		$"../Map".set_cell(goal)
+		var cx = int(goal.x/8.0)
+		var cz = int(goal.z/8.0)
+		if ($"../Map".chunks).has("%d.%d"%[cx, cz]):
+			$"../Map".set_cell(goal)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
