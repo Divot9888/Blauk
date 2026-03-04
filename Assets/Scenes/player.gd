@@ -9,12 +9,11 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("Quit"):
 		get_tree().quit()
 	
+	if !(is_on_floor()):
+		velocity += get_gravity() * delta
+	
 	if Input.is_action_pressed("Upwards"):
 		velocity.y = S
-	elif Input.is_action_pressed("Downwards"):
-		velocity.y = -S
-	else:
-		velocity.y = 0
 	
 	var input_dir := Input.get_vector("Leftward", "Rightward", "Forward", "Backward")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -29,5 +28,5 @@ func _physics_process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		$Camera.rotation_degrees.x -= event.relative.y
+		$Camera.rotation_degrees.x = clamp($Camera.rotation_degrees.x - event.relative.y, -90, 90)
 		rotation_degrees.y -= event.relative.x
