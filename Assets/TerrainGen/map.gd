@@ -1,7 +1,9 @@
 extends GridMap
 
 func _ready() -> void:
-	generate_chunk(0, 0)
+	for x in range(0, 8):
+		for z in range(0, 8):
+			generate_chunk(x, z)
 
 func generate_chunk(cx: int, cz: int) -> void:
 	for x in range(cx*8, (cx+1)*8):
