@@ -25,7 +25,7 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, S)
 	
 	move_and_slide()
-	# This probably needs a lot of optimizations lmao
+	## ALERT prevent placing blocks outside chunks
 	if Input.is_action_just_pressed("mine"):
 		var point = $Camera/Ray.get_collision_point()
 		var origin = $Camera/Ray.global_transform.origin
