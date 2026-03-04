@@ -4,11 +4,12 @@ const max_height = 32
 var chunks = [] 
 
 func _ready() -> void:
+	$"../Player".position = Vector3i(randi_range(0, 64), 48, randi_range(0, 64))
 	for x in range(0, 8):
 		for z in range(0, 8):
 			generate_chunk(x, z)
+			$"../Player".position.y = 48
 			await get_tree().process_frame
-	$"../Player".position = Vector3i(randi_range(0, 64), 48, randi_range(0, 64))
 
 func generate_chunk(cx: int, cz: int) -> void:
 	chunks.append("%d.%d"%[cx, cz])
