@@ -29,11 +29,11 @@ func set_cell(p: Vector3i) -> void:
 	set_cell_item(p, item)
 
 func load_map(arr: Array):
-	var i = 0
+	clear()
+	var c = 0
 	for block in arr:
-		i += 1
 		var parts = block.split(".")
-		if parts.size() != 4:
+		if parts.size() != 5:
 			return
 		var type = int(parts[0])
 		var pos = Vector3i(int(parts[1]), int(parts[2]), int(parts[3]))
@@ -41,19 +41,21 @@ func load_map(arr: Array):
 			set_cell_item(pos, -1)
 		else:
 			set_cell(pos)
-		if i >= 64:
+		if int(parts[4]) != c:
+			c = int(parts[4])
 			await get_tree().process_frame
-			i = 0
 
 func save_map() -> Array:
 	var blocks = []
+	var c = 0
 	for chunk in chunks:
+		c += 1
 		var chunkpos = chunk.split(".")
 		for x in range(int(chunkpos[0])*8, (int(chunkpos[0])+1)*8):
-			for y in max_height:
+			for y in range(max_height):
 				for z in range(int(chunkpos[1])*8, (int(chunkpos[1])+1)*8):
 					var pos = Vector3i(x, y, z)
-					var type = get_cell_item(Vector3i())
-					blocks.append("%d.%d.%d.%d"%[type, pos.x, pos.y, pos.z])
+					var type = get_cell_item(Vector3i(pos))
+					blocks.append("%d.%d.%d.%d.%d"%[type, pos.x, pos.y, pos.z, c])
 		await get_tree().process_frame
 	return blocks
