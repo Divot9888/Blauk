@@ -3,9 +3,10 @@ extends GridMap
 const max_height = 32
 
 func _ready() -> void:
-	for x in range(0, 1):
-		for z in range(0, 1):
+	for x in range(0, 8):
+		for z in range(0, 8):
 			generate_chunk(x, z)
+			await get_tree().process_frame
 
 func generate_chunk(cx: int, cz: int) -> void:
 	for x in range(cx*8, (cx+1)*8):
