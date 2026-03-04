@@ -8,7 +8,7 @@ func _ready() -> void:
 		for z in range(0, 8):
 			generate_chunk(x, z)
 			await get_tree().process_frame
-	print(chunks)
+	$"../Player".position = Vector3i(randi_range(0, 64), 48, randi_range(0, 64))
 
 func generate_chunk(cx: int, cz: int) -> void:
 	chunks.append("%d.%d"%[cx, cz])
