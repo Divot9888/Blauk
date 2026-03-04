@@ -27,3 +27,33 @@ func set_cell(p: Vector3i) -> void:
 	if p.y < 0:
 		return
 	set_cell_item(p, item)
+
+func load_map(arr: Array):
+	var i = 0
+	for block in arr:
+		i += 1
+		var parts = block.split(".")
+		if parts.size() != 4:
+			return
+		var type = parts[0]
+		var pos = Vector3i(parts[1], parts[2], parts[3])
+		if type == -1:
+			set_cell_item(pos, -1)
+		else:
+			set_cell(pos)
+		if i >= 64:
+			await get_tree().process_frame
+			i = 0
+
+func save_map() -> Array:
+	var blocks = []
+	for chunk in chunks:
+		var chunkpos = chunk.split(".")
+		for x in range(chunkpos[0]*8, (chunkpos[0]+1)*8):
+			for y in max_height:
+				for z in range(chunkpos[1]*8, (chunkpos[1]+1)*8):
+					var pos = Vector3i(x, y, z)
+					var type = get_cell_item(Vector3i())
+					blocks.append("%d.%d.%d.%d"%[type, pos.x, pos.y, pos.z])
+		await get_tree().process_frame
+	return blocks
