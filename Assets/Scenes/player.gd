@@ -25,6 +25,19 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, S)
 	
 	move_and_slide()
+	# This probably needs a lot of optimizations lmao
+	if Input.is_action_just_pressed("mine"):
+		var point = $Camera/Ray.get_collision_point()
+		var origin = $Camera/Ray.global_transform.origin
+		var dir = (point - origin).normalized()
+		var goal = point + dir * 0.01
+		$"../Map".set_cell_item(goal, -1)
+	if Input.is_action_just_pressed("place"):
+		var point = $Camera/Ray.get_collision_point()
+		var origin = $Camera/Ray.global_transform.origin
+		var dir = (point - origin).normalized()
+		var goal = point - dir * 0.01
+		$"../Map".set_cell(goal)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
