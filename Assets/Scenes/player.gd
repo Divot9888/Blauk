@@ -1,5 +1,7 @@
 extends CharacterBody3D
 
+var save = []
+
 const S = 5
 
 func _ready() -> void:
@@ -41,6 +43,11 @@ func _physics_process(delta: float) -> void:
 		var cz = int(goal.z/8.0)
 		if ($"../Map".chunks).has("%d.%d"%[cx, cz]):
 			$"../Map".set_cell(goal)
+	
+	if Input.is_action_pressed("Save"):
+		save = await $"../Map".save_map()
+	elif Input.is_action_pressed("Load"):
+		await $"../Map".load_map(save)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
