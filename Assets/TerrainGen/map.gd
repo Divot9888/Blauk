@@ -1,7 +1,7 @@
 extends GridMap
 
 const max_height = 32
-var chunks = [] 
+var chunks = []
 
 func _ready() -> void:
 	$"../Player".position = Vector3i(randi_range(0, 64), 48, randi_range(0, 64))
@@ -16,7 +16,18 @@ func generate_chunk(cx: int, cz: int) -> void:
 	for x in range(cx*8, (cx+1)*8):
 		for z in range(cz*8, (cz+1)*8):
 			for y in range(0, floor(max_height / 2.0) + 1):
-				set_cell(Vector3i(x, y, z))
+				var pos = Vector3i(x, y, z)
+				if is_exposed(pos):
+					set_cell(pos)
+
+func is_exposed(pos: Vector3i) -> bool:
+	for dir in [Vector3.LEFT, Vector3.RIGHT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK]:
+		var neighbor = pos + dir
+		var cx = int(neighbor.x/8.0)
+		var cz = int(neighbor.z/8.0)
+		if !chunks.has("%d.%d"%[cx, cz]) or neighbor.y > max_height or neighbor.y < 0 or get_cell_item(neighbor) == -1:
+			return true
+	return false
 
 func set_cell(p: Vector3i) -> void:
 	var item := 1
@@ -56,6 +67,7 @@ func save_map() -> Array:
 				for z in range(int(chunkpos[1])*8, (int(chunkpos[1])+1)*8):
 					var pos = Vector3i(x, y, z)
 					var type = get_cell_item(Vector3i(pos))
-					blocks.append("%d.%d.%d.%d.%d"%[type, pos.x, pos.y, pos.z, c])
+					if type != -1:
+						blocks.append("%d.%d.%d.%d.%d"%[type, pos.x, pos.y, pos.z, c])
 		await get_tree().process_frame
 	return blocks
